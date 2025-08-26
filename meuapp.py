@@ -3,10 +3,8 @@ import pandas as pd
 import requests
 import json
 
-# Tente importar as bibliotecas e mostre um erro amigável se não estiverem instaladas
 try:
     from newsdataapi import NewsDataApiClient
-    # --- CORREÇÃO APLICADA AQUI ---
     import google.generativeai as genai
     from pydantic import BaseModel, Field
     from typing import List
@@ -22,21 +20,17 @@ except ImportError as e:
     st.stop()
  
 
-# --- CONFIGURAÇÃO DAS APIS ---
-# Carrega as chaves de API a partir dos segredos do Streamlit
 try:
     NEWS_API_KEY = st.secrets["NEWS_API_KEY"]
     JINA_API_KEY = st.secrets["JINA_API_KEY"]
     GEMINI_API_KEY = st.secrets["GEMINI_API_KEY"]
 
-    # Configura o cliente da API do Gemini
     genai.configure(api_key=GEMINI_API_KEY)
 except (KeyError, FileNotFoundError):
     st.error("Erro: As chaves de API não foram encontradas. Verifique seu arquivo .streamlit/secrets.toml.")
     st.stop()
 
 
-# --- FUNÇÕES DE PROCESSAMENTO DE DADOS ---
 
 @st.cache_data(ttl=3600) # Cache por 1 hora
 def pega_noticias(termo_busca):
@@ -55,7 +49,6 @@ def pega_noticias(termo_busca):
         colunas_existentes = [col for col in colunas_mapeadas.keys() if col in df.columns]
         df_final = df[colunas_existentes].rename(columns=colunas_mapeadas)
         
-        # Limita a 5 notícias para agilizar o processo e evitar exceder cotas de API
         return df_final.dropna(subset=['link']).head(5)
 
     except Exception as e:
@@ -125,8 +118,6 @@ def processa_noticias_com_gemini(df_conteudos):
     return respostas_json
 
 
-# --- FUNÇÃO PRINCIPAL DE RENDERIZAÇÃO ---
-
 def gerar_newsletter_streamlit(lista_json):
     """Renderiza a newsletter na interface do Streamlit."""
     if not lista_json:
@@ -164,7 +155,6 @@ def gerar_newsletter_streamlit(lista_json):
         st.markdown("<br>", unsafe_allow_html=True)
 
 
-# --- INTERFACE DO USUÁRIO (UI) E FLUXO PRINCIPAL ---
 
 st.set_page_config(page_title="Gerador de Newsletter com IA", layout="centered")
 
@@ -180,7 +170,7 @@ a:hover { text-decoration: underline; }
 st.title("📰 Gerador de Newsletter com IA")
 st.markdown("Digite um tema, clique em gerar e obtenha um resumo das últimas notícias, processado por Inteligência Artificial.")
 
-termo_busca = st.text_input("Qual tema você quer pesquisar?", "inteligência artificial")
+termo_busca = st.text_input("Qual tema você quer pesquisar?",)
 
 if st.button("Gerar Newsletter"):
     if not termo_busca:
