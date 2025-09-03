@@ -1,9 +1,9 @@
-# Conteúdo final e correto do requirements.txt
-streamlit
-pandas
-requests
-google-generativeai
-GoogleNews
-pydantic
-numpy
-scikit-learn
+# requirements.txt com versões fixadas para garantir a compatibilidade
+streamlit==1.40.1
+pandas==2.2.2
+requests==2.32.3
+google-generativeai==0.8.5
+GoogleNews==1.6.1
+pydantic==2.8.2
+numpy==1.26.4
+scikit-learn==1.5.1
